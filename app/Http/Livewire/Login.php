@@ -12,7 +12,7 @@ use Str;
 
 class Login extends Component
 {
-    public $email, $password, $success = false, $forgetpassword = 0;
+    public $email, $password, $remember = false, $success = false, $forgetpassword = 0;
     //Render Page
     public function render()
     {
@@ -27,7 +27,7 @@ class Login extends Component
         ]);
 
 
-        if (Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
+        if (Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
             DB::table('password_resets')->where('email', $this->email)->delete();
 
             return redirect('admin/dashboard');

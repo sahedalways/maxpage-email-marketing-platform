@@ -7,18 +7,17 @@
 
                 <div class="row justify-content-center">
                     <div class="col-lg-5 col-md-8">
-                        <div class="card border-0 mb-0">
-                            <div class="card-header bg-transparent text-center">
-                                <div class="d-flex align-items-center justify-content-center mt-2 mb-2">
+                        <div class="card border-0 mb-0" x-data="{ resetpassword: false, success: @entangle('success') }">
+                            <div class="card-header bg-transparent text-center pb-0">
+                                <div class="d-flex align-items-center justify-content-center mt-0 mb-0">
                                     <img src="{{ asset(getSiteLogo()) }}" class="login-logo">
                                 </div>
+                                <p class="text-lg text-secondary mb-6 mt-n4" x-show="resetpassword == false">Admin Login</p>
+                                <p class="text-lg text-secondary mb-6 mt-n4" x-show="resetpassword == true" x-cloak>Forgot Password</p>
                             </div>
 
-                            <div class="card-body px-lg-5 pt-0" x-data="{ resetpassword: false, success: @entangle('success') }" x-transition.fade>
+                            <div class="card-body px-lg-5 pt-0" x-transition.fade>
                                 <div class="" x-show="resetpassword == false">
-                                    <div class="text-muted mb-4">
-                                        <small>Login to Continue</small>
-                                    </div>
                                     <form role="form" class="text-start">
                                         <div class="mb-3">
                                             <input type="email" class="form-control" placeholder="Email"
@@ -39,12 +38,17 @@
                                         @enderror
 
                                         <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="rememberMe">
+                                            <input class="form-check-input" type="checkbox" id="rememberMe"
+                                                wire:model="remember">
                                             <label class="form-check-label" for="rememberMe">Remember me</label>
                                         </div>
                                         <div class="text-center">
                                             <button type="button" wire:click="login"
-                                                class="btn btn-primary w-100 my-4 mb-4">Login</button>
+                                                class="btn btn-primary w-100 my-4 mb-4"
+                                                wire:loading.attr="disabled" wire:target="login">
+                                                <span wire:loading.remove wire:target="login">Login</span>
+                                                <span wire:loading wire:target="login">Logging in ...</span>
+                                            </button>
                                         </div>
                                         <div class="mb-2 position-relative text-center">
                                             <p
@@ -62,9 +66,6 @@
                                 </div>
                                 <div class="" x-show="resetpassword == true" x-transition x-cloak>
                                     <div class="" x-show="success==false">
-                                        <div class="text-muted mb-4">
-                                            <small>Enter Your Email Address</small>
-                                        </div>
                                         <form role="form" class="text-start">
                                             <div class="mb-3">
                                                 <input type="email" class="form-control" placeholder="Email"
