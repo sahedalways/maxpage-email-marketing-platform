@@ -252,6 +252,55 @@ class SendMessage extends Component
         unset($this->selectedRecipients[$criteriaType]);
     }
 
+    public function resolveRecipients()
+    {
+        $field = $this->selectedCriteria === 'email' ? 'email' : 'phone';
+
+        if ($this->selectedAudience === 'all') {
+            return Contact::whereNotNull($field)
+                ->where($field, '!=', '')
+                ->get(['email', 'phone', 'name'])
+                ->map(fn($contact) => [
+                    'email' => $contact->email,
+                    'phone' => $contact->phone,
+                    'name' => $contact->name,
+                ])
+                ->toArray();
+        }
+
+        if ($this->selectedAudience === 'type') {
+            return Contact::where('user_type', $this->userTypeFilter)
+                ->whereNotNull($field)
+                ->where($field, '!=', '')
+                ->get(['email', 'phone', 'name'])
+                ->map(fn($contact) => [
+                    'email' => $contact->email,
+                    'phone' => $contact->phone,
+                    'name' => $contact->name,
+                ])
+                ->toArray();
+        }
+
+        return array_values($this->selectedRecipients);
+    }
+
+    public function recipientMissingMessage()
+    {
+        $label = $this->selectedCriteria === 'email' ? 'email address' : 'phone number';
+
+        if ($this->selectedAudience === 'all') {
+            return "No contacts with a {$label} were found to send to.";
+        }
+
+        if ($this->selectedAudience === 'type') {
+            return 'No contacts were found for the selected user type.';
+        }
+
+        return $this->selectedCriteria === 'email'
+            ? 'Please select at least one recipient before sending.'
+            : 'Please select at least one recipient phone number before sending.';
+    }
+
 
     public function setRecipientEmail($email)
     {
@@ -328,10 +377,12 @@ class SendMessage extends Component
 
 
 
-        if (!$this->selectedRecipients && !$this->recipient_email) {
+        $recipients = $this->resolveRecipients();
+
+        if (empty($recipients)) {
             $this->dispatchBrowserEvent(
                 'alert',
-                ['type' => 'error', 'message' => 'Please select at least one recipient before sending.']
+                ['type' => 'error', 'message' => $this->recipientMissingMessage()]
             );
             return;
         }
@@ -357,7 +408,7 @@ class SendMessage extends Component
         }
 
         try {
-            foreach ($this->selectedRecipients as $recipient) {
+            foreach ($recipients as $recipient) {
                 $originalContent = $this->content;
 
                 $template = new Template();
@@ -459,10 +510,12 @@ class SendMessage extends Component
 
 
 
-        if (!$this->selectedRecipients) {
+        $recipients = $this->resolveRecipients();
+
+        if (empty($recipients)) {
             $this->dispatchBrowserEvent(
                 'alert',
-                ['type' => 'error',  'message' => 'Please select at least one recipient phone number before sending.']
+                ['type' => 'error',  'message' => $this->recipientMissingMessage()]
             );
             return;
         }
@@ -493,7 +546,7 @@ class SendMessage extends Component
 
 
         try {
-            foreach ($this->selectedRecipients as $recipient) {
+            foreach ($recipients as $recipient) {
                 $originalContent = $this->content;
 
 
@@ -532,7 +585,7 @@ class SendMessage extends Component
                     $role = auth()->user()->role;
                     $brandName = getApplicationName() ?? 'Maxpage';
 
-                    if ($defaultGateway == 'twilio') {
+                    if ($defaultGateway->is_gateway_type == 'twilio') {
                         SmsHelper::sendSms($recipient['phone'], $this->content, $message->id, $defaultGateway, $role);
                     } else {
                         dispatch(new SendBrevoSmsJob($brandName, $recipient['phone'], $this->content, $message->id, $defaultGateway, $role));
@@ -595,10 +648,12 @@ class SendMessage extends Component
 
 
 
-        if (!$this->selectedRecipients) {
+        $recipients = $this->resolveRecipients();
+
+        if (empty($recipients)) {
             $this->dispatchBrowserEvent(
                 'alert',
-                ['type' => 'error',  'message' => 'Please select at least one recipient WhatsApp number before sending.']
+                ['type' => 'error',  'message' => $this->recipientMissingMessage()]
             );
             return;
         }
@@ -630,7 +685,7 @@ class SendMessage extends Component
 
 
         try {
-            foreach ($this->selectedRecipients as $recipient) {
+            foreach ($recipients as $recipient) {
                 $originalContent = $this->content;
 
 
@@ -669,7 +724,7 @@ class SendMessage extends Component
 
 
 
-                    WhatsappHelper::sendWhatsappMessage($recipient['phone'], $this->content, $defaultGateway);
+                    WhatsappHelper::sendWhatsappMessage($recipient['phone'], $this->content, $message->id, $defaultGateway, $role);
                 }
 
                 $this->content = $originalContent;

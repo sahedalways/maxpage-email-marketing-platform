@@ -6,8 +6,8 @@ use App\Jobs\SendWhatsappMessageJob;
 
 class WhatsappHelper
 {
-  public static function sendWhatsappMessage($recipientPhoneNo, $content, $defaultGateway)
+  public static function sendWhatsappMessage($recipientPhoneNo, $content, $messageId, $defaultGateway, $role)
   {
-    dispatch(new SendWhatsappMessageJob($recipientPhoneNo, $content, $defaultGateway));
+    dispatch(new SendWhatsappMessageJob($recipientPhoneNo, $content, $messageId, $defaultGateway, $role));
   }
 }

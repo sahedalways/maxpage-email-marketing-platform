@@ -71,23 +71,25 @@ class SendScheduledMessages extends Command
                 $this->info("Message to {$message->receiver_email} sent.");
             } else if ($message->type == 'phone') {
 
+                $smsGateway = MessageGateway::where('status', 'default')->where('type', 'sms')
+                    ->first();
 
                 $brandName = getApplicationName() ?? 'Maxpage';
 
-                if ($defaultGateway == 'twilio') {
-                    SmsHelper::sendSms($message->receiver_phone_no, $message->content, $message->id, $defaultGateway, $role);
+                if ($smsGateway && $smsGateway->is_gateway_type == 'twilio') {
+                    SmsHelper::sendSms($message->receiver_phone_no, $message->content, $message->id, $smsGateway, $role);
                 } else {
-                    dispatch(new SendBrevoSmsJob($brandName, $message->receiver_phone_no, $message->content, $message->id, $defaultGateway, $role));
+                    dispatch(new SendBrevoSmsJob($brandName, $message->receiver_phone_no, $message->content, $message->id, $smsGateway, $role));
                 }
 
 
                 $this->info("Message to {$message->receiver_phone_no} sent.");
             } else {
-                $defaultGateway = MessageGateway::where('status', 'default')->where('type', 'whatsapp')
+                $whatsappGateway = MessageGateway::where('status', 'default')->where('type', 'whatsapp')
                     ->first();
 
 
-                WhatsappHelper::sendWhatsappMessage($message->receiver_phone_no, $message->content, $defaultGateway);
+                WhatsappHelper::sendWhatsappMessage($message->receiver_phone_no, $message->content, $message->id, $whatsappGateway, $role);
 
 
 

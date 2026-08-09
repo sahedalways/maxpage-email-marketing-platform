@@ -13,19 +13,23 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class SendWhatsAppMessageJob implements ShouldQueue
+class SendWhatsappMessageJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $recipientPhoneNo;
     protected $content;
+    protected $messageId;
     protected $defaultGateway;
+    protected $role;
 
-    public function __construct($recipientPhoneNo, $content, $defaultGateway)
+    public function __construct($recipientPhoneNo, $content, $messageId, $defaultGateway, $role)
     {
         $this->recipientPhoneNo = $recipientPhoneNo;
         $this->content = $content;
+        $this->messageId = $messageId;
         $this->defaultGateway = $defaultGateway;
+        $this->role = $role;
     }
 
     public function handle()
@@ -37,7 +41,7 @@ class SendWhatsAppMessageJob implements ShouldQueue
                 $twilioNumber = $this->defaultGateway->twilio_phone_number;
 
                 $client = new TwilioClient($accountSid, $authToken);
-                $message = $client->messages->create(
+                $client->messages->create(
                     "whatsapp:{$this->recipientPhoneNo}",
                     [
                         'from' => "whatsapp:{$twilioNumber}",
@@ -56,20 +60,29 @@ class SendWhatsAppMessageJob implements ShouldQueue
                             'body' => $this->content,
                         ],
                     ]);
+
+                if ($response->failed()) {
+                    throw new Exception($response->body());
+                }
             }
 
-            if (auth()->user()->role == 'company') {
-                MessageHistory::where('message_id', $message->id)->update(['status' => 'sent', 'company_id' => $this->defaultGateway->company_id]);
-            } else {
-                MessageHistory::where('message_id', $message->id)->update(['status' => 'sent']);
-            }
+            $this->updateHistory('sent', null);
+            Log::info("WhatsApp message sent successfully to {$this->recipientPhoneNo}");
         } catch (Exception $e) {
             Log::error("WhatsApp Message sending failed: " . $e->getMessage());
-            if (auth()->user()->role == 'company') {
-                MessageHistory::where('message_id', $message->id)->update(['status' => 'failed', 'company_id' => $this->defaultGateway->company_id, 'error_message' => $e->getMessage()]);
-            } else {
-                MessageHistory::where('message_id', $message->id)->update(['status' => 'failed', 'error_message' => $e->getMessage()]);
-            }
+            $this->updateHistory('failed', $e->getMessage());
         }
+    }
+
+    protected function updateHistory($status, $errorMessage)
+    {
+        $data = ['status' => $status];
+        if ($errorMessage !== null) {
+            $data['error_message'] = $errorMessage;
+        }
+        if ($this->role == 'company') {
+            $data['company_id'] = $this->defaultGateway->company_id;
+        }
+        MessageHistory::where('message_id', $this->messageId)->update($data);
     }
 }
