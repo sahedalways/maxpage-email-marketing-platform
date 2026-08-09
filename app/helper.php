@@ -6,7 +6,7 @@ function getFavIcon()
 {
 
 
-    return '/assets/img/favicon.png';
+    return '/assets/img/favicon.ico';
 }
 
 
