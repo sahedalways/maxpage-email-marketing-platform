@@ -1,0 +1,618 @@
+.graph {
+    max-height: 275px;
+    max-width: 275px;
+}
+
+
+.view-bills {
+    font-weight: 550;
+}
+
+.table-wrapper-scroll-y {
+    display: block;
+
+}
+
+    .table-sm th,
+    .table-sm td {
+        vertical-align: middle;
+    }
+
+/* Custom dropdown styling */
+.custom-dropdown-menu {
+    max-height: 200px;
+    overflow-y: auto;
+    width: 280px; /* Adjust width as needed */
+    background-color: #fff; /* White background */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    border: 1px solid #ddd; /* Light border for contrast */
+    transition: all 0.3s ease; /* Smooth transition effect */
+    margin-top: -5px; /* Slightly reduce the gap above the dropdown (move it up) */
+    position: relative;
+    top: -5px; /* This can be adjusted to move it further up or down */
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Style for dropdown items */
+.custom-dropdown-item {
+    padding: 12px 18px; /* Adds more space */
+    font-size: 14px;
+    color: #333; /* Dark color for text */
+    border-bottom: 1px solid #f0f0f0; /* Light border between items */
+    transition: all 0.2s ease; /* Smooth transition */
+}
+
+.custom-dropdown-item:hover {
+    background-color: #f8f9fa; /* Subtle background change on hover */
+    color: #007bff; /* Change text color to blue on hover */
+    cursor: pointer; /* Pointer cursor */
+}
+
+/* Hover effect for last item (no border) */
+.custom-dropdown-item:last-child {
+    border-bottom: none; /* Removes bottom border from the last item */
+}
+
+
+.modal-dialog.full-width {
+    max-width: 100%;
+    margin: 0;
+}
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 320px;
+    overflow: auto;
+    width: 100%;
+    min-height: 41vh !important
+}
+
+
+
+.my-custom-scrollbar::-webkit-scrollbar {
+    width: 3px !important;
+    height: 5px !important;
+}
+
+
+
+
+.input-sm {
+    height: 30px;
+}
+
+.input-sm-2 {
+    height: 10px;
+}
+
+.report-text {
+    font-size: 11px;
+}
+
+.ledger-text {
+    font-size: 12px;
+}
+
+.bill-text {
+    font-size: 15px;
+}
+
+.my-custom-scrollbar-stock {
+    position: relative;
+    height: 380px;
+    overflow: auto;
+    width: 100%;
+    min-height: 53vh !important
+}
+
+.status-container {
+    height: 250px;
+    overflow-y: scroll;
+    padding: 5px;
+}
+
+.my-custom-scrollbar-stock::-webkit-scrollbar {
+    width: 3px !important;
+    height: 5px !important;
+}
+
+
+.my-custom-scrollbar-ledger {
+    position: relative;
+    height: 450px;
+    overflow: auto;
+    width: 100%;
+    min-height: 65vh !important
+}
+
+.my-custom-scrollbar-ledger::-webkit-scrollbar {
+    width: 3px !important;
+    height: 5px !important;
+}
+
+
+.my-custom-scrollbar-bill2 {
+    position: relative;
+    height: 300px;
+    overflow: auto;
+    width: 100%;
+    min-height: 50vh !important
+}
+
+.my-custom-scrollbar-bill2::-webkit-scrollbar {
+    width: 3px !important;
+    height: 5px !important;
+}
+
+.pos-code {
+    font-weight: 750;
+    font-size: 16px;
+}
+
+.pos-text {
+    font-size: 13px;
+}
+
+
+.pos-card:active + .pos-card,
+.pos-card:checked + .pos-card,
+.pos-card.active,
+.pos-card:active,
+.pos-card:focus {
+    color: #FFF;
+    background-color: rgba(0, 204, 189, .5);
+}
+
+.pos-card:hover:not(.disabled):not(:disabled) {
+    color: #FFF;
+    background-color: rgba(0, 204, 189, .5);
+}
+
+
+.pos-card-wrapper-scroll-y {
+    display: block;
+
+}
+
+.my-custom-scrollbar-pos-card {
+    position: relative;
+    height: 400px;
+    overflow: auto;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    min-height: 55vh !important
+}
+
+.my-custom-scrollbar-pos-card::-webkit-scrollbar {
+    width: 3px !important;
+
+}
+
+
+.my-custom-scrollbar-pos-card::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.my-custom-scrollbar-pos-card::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+.my-custom-scrollbar-pos-card::-webkit-scrollbar-thumb:hover {
+    background: transparent;
+}
+
+
+
+
+.order-list-wrapper-scroll-y {
+    display: block;
+
+}
+
+.my-custom-scrollbar-order-list {
+    position: relative;
+    height: 210px;
+    overflow: auto;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    min-height: 30vh !important
+}
+
+.my-custom-scrollbar-order-list::-webkit-scrollbar {
+    width: 3px !important;
+
+}
+
+
+.my-custom-scrollbar-order-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.my-custom-scrollbar-order-list::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+.my-custom-scrollbar-order-list::-webkit-scrollbar-thumb:hover {
+    background: transparent;
+}
+
+
+
+
+.btn-counter {
+    max-height: 30px;
+    max-width: 30px;
+}
+
+
+.customer-badge {
+    height: 30px;
+    width: 30px;
+}
+
+.login-cover {
+    min-height: 780px;
+    max-width: 1200px;
+}
+
+.inventory-text {
+    font-size: 13px;
+}
+
+
+
+.match-height > [class*=col] {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-flow: column;
+    -ms-flex-flow: column;
+    flex-flow: column
+}
+
+.match-height > [class*=col] > .card {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto
+}
+
+.login-logo {
+    width: 200px !important;
+}
+
+.sidenav .navbar-brand-img {
+    max-height: 5.5rem !important;
+}
+
+.sidenav .sidenav-header {
+    margin-bottom: 1.5rem;
+}
+
+.sidenav-header .navbar-brand {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+
+.board-title {
+    background-color: #f1f1f1;
+    padding: 5px 20px;
+}
+
+.flex {
+    display: flex;
+    flex-direction: row;
+}
+
+.scrum-board {
+    flex: 1;
+    padding: 20px;
+}
+
+.scrum-board-processing {
+    flex: 1;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+}
+
+
+.modal-body {
+    max-height: 800px; 
+    overflow-y: auto;
+}
+
+.modal-body::-webkit-scrollbar {
+    width: 12px; 
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+.zap-box {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 15px;
+    width: 340px;
+    text-align: left;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #4a90e2;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+/* .zap-box:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+} */
+
+.zap-plus {
+    font-size: 26px;
+    color: #007bff;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: transform 0.2s ease;
+}
+
+.zap-plus:hover {
+    transform: scale(1.2);
+}
+
+
+.scrum-task-pending {
+    position: relative;
+    display: block;
+    padding: 10px;
+    border: .5px solid #8392ab;
+    border-left: 5px solid #8392ab;
+    margin-bottom: 10px;
+    border-radius: 15px;
+    background-color: #fff;
+    cursor: all-scroll;
+}
+
+
+.scrum-task-processing {
+    position: relative;
+    display: block;
+    padding: 10px;
+    border: .5px solid #faae42;
+    border-left: 5px solid #faae42;
+    margin-bottom: 10px;
+    border-radius: 15px;
+    background-color: #fff;
+    cursor: all-scroll;
+}
+
+
+.scrum-task-ready {
+    position: relative;
+    display: block;
+    padding: 10px;
+    border: .5px solid #2dce89;
+    border-left: 5px solid #2dce89;
+    margin-bottom: 10px;
+    border-radius: 15px;
+    background-color: #fff;
+    cursor: all-scroll;
+}
+
+
+
+.scrum-board-column {
+    // background-color:blue;
+    min-height: 200px;
+    padding: 10px;
+    height: 100%;
+}
+
+
+
+
+
+
+
+.today-task-pending {
+    position: relative;
+    display: block;
+    padding: 5px;
+    border: .5px solid #8392ab;
+    border-left: 5px solid #8392ab;
+    margin-bottom: 5px;
+    border-radius: 15px;
+    background-color: #fff;
+}
+
+
+.today-task-processing {
+    position: relative;
+    display: block;
+    padding: 5px;
+    border: .5px solid #faae42;
+    border-left: 5px solid #faae42;
+    margin-bottom: 5px;
+    border-radius: 15px;
+    background-color: #fff;
+}
+
+
+.today-task-ready {
+    position: relative;
+    display: block;
+    padding: 5px;
+    border: .5px solid #2dce89;
+    border-left: 5px solid #2dce89;
+    margin-bottom: 5px;
+    border-radius: 15px;
+    background-color: #fff;
+}
+
+.today-task-delivered {
+    position: relative;
+    display: block;
+    padding: 5px;
+    border: .5px solid #05ABD3;
+    border-left: 5px solid #05ABD3;
+    margin-bottom: 5px;
+    border-radius: 15px;
+    background-color: #fff;
+}
+
+.today-task-returned {
+    position: relative;
+    display: block;
+    padding: 5px;
+    border: .5px solid #f5365c;
+    border-left: 5px solid #f5365c;
+    margin-bottom: 5px;
+    border-radius: 15px;
+    background-color: #fff;
+}
+
+.input-counter {
+    max-width: 80px;
+}
+
+
+@media (max-width: 1024px) { 
+    .navbar-vertical.navbar-expand-xs .navbar-collapse { 
+      display: block; 
+      overflow: auto; 
+      height: calc(100vh - 100px) !important; 
+    }
+  }
+
+.sidenav .navbar-nav > .nav-item > .nav-link.active {
+    padding-top: 0.375rem !important;
+    padding-bottom: 0.375rem !important;
+}
+
+.sidenav .nav.ms-4 .nav-link.active,
+.sidenav .nav.ms-4 .nav-item.active > .nav-link {
+    background-color: rgba(5, 171, 211, 0.12) !important;
+    background-image: none !important;
+    border-radius: 0.75rem !important;
+    font-weight: 600;
+}
+
+.sidenav .nav.ms-4 .nav-link.active .side-bar-inner,
+.sidenav .nav.ms-4 .nav-item.active > .nav-link .side-bar-inner {
+    color: #05ABD3 !important;
+}
+
+.btn-primary,
+.btn.bg-gradient-primary {
+    color: #fff !important;
+    background-color: #05ABD3 !important;
+    border-color: #05ABD3 !important;
+    background-image: linear-gradient(310deg, #05ABD3, #05ABD3) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary.active,
+.btn-primary:active,
+.btn-primary:not(:disabled):not(.disabled).active,
+.btn-primary:not(:disabled):not(.disabled):active,
+.btn.bg-gradient-primary:hover,
+.btn.bg-gradient-primary:focus,
+.btn.bg-gradient-primary.active {
+    color: #fff !important;
+    background-color: #0486A6 !important;
+    border-color: #0486A6 !important;
+    background-image: linear-gradient(310deg, #0486A6, #0486A6) !important;
+    box-shadow: none !important;
+}
+
+.btn-outline-primary {
+    color: #05ABD3 !important;
+    border-color: #05ABD3 !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary.active {
+    color: #fff !important;
+    background-color: #05ABD3 !important;
+    border-color: #05ABD3 !important;
+}
+
+.msg-criteria-tabs {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50px;
+    padding: 5px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.msg-criteria-tabs .msg-tab {
+    border: none;
+    border-radius: 50px;
+    padding: 8px 22px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #ffffff;
+    background: transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+
+.msg-criteria-tabs .msg-tab:hover {
+    background: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+}
+
+.msg-criteria-tabs .msg-tab.active {
+    background: #ffffff;
+    color: #0486A6;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.msg-criteria-tabs .msg-tab.active i {
+    color: #0486A6 !important;
+}
+
+.msg-criteria-tabs .msg-tab i {
+    font-size: 15px;
+}
+
+.custom-textarea .ck-editor__editable_inline {
+    min-height: 260px;
+}
+
+.custom-textarea textarea.form-control {
+    min-height: 160px;
+}
+
+
+  
