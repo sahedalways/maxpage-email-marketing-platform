@@ -1,27 +1,18 @@
 <?php
 
+use App\Http\Controllers\AssetController;
+use App\Http\Controllers\MessageViewController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Livewire\Admin\MessageHub\MessageHistory;
 use App\Http\Livewire\Admin\MessageHub\MessageSettings;
 use App\Http\Livewire\Admin\MessageHub\SendMessage;
 use App\Http\Livewire\Admin\MessageHub\Templates;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MessageViewController;
 
-Route::get('/clear', function () {
-    Artisan::call('route:cache');
-    Artisan::call('config:cache');
-    Artisan::call('view:clear');
-    Artisan::call('cache:clear');
-
-    return 'Routes cache has been cleared';
-});
-
-Route::get('/autologin', function () {
-    Auth::login(\App\Models\User::first());
-    return redirect(request('to', '/admin/messages/send'));
-});
+if (!app()->environment('production')) {
+    Route::get('/clear', [AssetController::class, 'clear']);
+    Route::get('/autologin', [AssetController::class, 'autoLogin']);
+}
 
 /* login */
 Route::get('/', [\App\Http\Livewire\Login::class, '__invoke'])->name('login');
@@ -67,42 +58,13 @@ $templatesRoutes = function () {
 
 /* asset serving used by email templates */
 Route::prefix('admin')->group(function () {
-    Route::get('/files/{uid}/{name?}', [function ($uid, $name = null) {
-        $path = storage_path('app/users/' . $uid . '/home/files/' . $name);
-        if (\File::exists($path)) {
-            $mime_type = \App\Library\File::getFileType($path);
-            return response()->file($path, array('Content-Type' => $mime_type));
-        } else {
-            abort(404);
-        }
-    }])->where('name', '.+')->name('user_files');
+    Route::get('/files/{uid}/{name?}', [AssetController::class, 'userFiles'])->where('name', '.+')->name('user_files');
 
     // assets path for customer thumbs
-    Route::get('/thumbs/{uid}/{name?}', [function ($uid, $name = null) {
-        $path = storage_path('app/users/' . $uid . '/home/thumbs/' . $name);
-        if (\File::exists($path)) {
-            $mime_type = \App\Library\File::getFileType($path);
-            return response()->file($path, array('Content-Type' => $mime_type));
-        } else {
-            abort(404);
-        }
-    }])->where('name', '.+')->name('user_thumbs');
+    Route::get('/thumbs/{uid}/{name?}', [AssetController::class, 'userThumbs'])->where('name', '.+')->name('user_thumbs');
 
     // assets path for email (base64 encoded dirname)
-    Route::get('assets/{dirname}/{basename}', [function ($dirname, $basename) {
-        $dirname = \App\Library\StringHelper::base64UrlDecode($dirname);
-        $absPath = storage_path(join_paths($dirname, $basename));
-
-        if (\File::exists($absPath)) {
-            $mimetype = \App\Library\File::getFileType($absPath);
-            return response()->file($absPath, array(
-                'Content-Type' => $mimetype,
-                'Content-Length' => filesize($absPath),
-            ));
-        } else {
-            abort(404);
-        }
-    }])->name('public_assets');
+    Route::get('assets/{dirname}/{basename}', [AssetController::class, 'publicAssets'])->name('public_assets');
 });
 
 /* Reset Password */
