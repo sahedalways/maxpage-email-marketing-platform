@@ -6,6 +6,9 @@ cd /var/www/maxpage
 echo "=== [deploy] pulling latest code ==="
 git pull --ff-only origin main
 
+echo "=== [deploy] clearing stale caches ==="
+rm -f /var/www/maxpage/bootstrap/cache/*.php
+
 echo "=== [deploy] installing dependencies ==="
 export COMPOSER_ALLOW_SUPERUSER=1
 composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
