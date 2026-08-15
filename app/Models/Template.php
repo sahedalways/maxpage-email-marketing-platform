@@ -961,6 +961,12 @@ class Template extends Model
     public static function createFromDirectory($attributes, $directory)
     {
         $template = new self();
+
+        // Only fill attributes that map to real template columns. Seeding runs
+        // with mass assignment protection disabled, so keys like 'dir' and
+        // 'category' (which are not database columns) must be stripped here.
+        $attributes = array_intersect_key($attributes, array_flip($template->getFillable()));
+
         $template->fill($attributes); // Including 'uid', 'name', 'content', 'builder'
 
         // System or Customer template
