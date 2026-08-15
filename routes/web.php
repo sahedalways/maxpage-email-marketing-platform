@@ -49,8 +49,7 @@ $templatesRoutes = function () {
 
         Route::get('/{uid}/builder/change-template/{change_uid}', [TemplateController::class, 'builderChangeTemplate'])->name('templates.builderChangeTemplate');
         Route::get('/builder/templates/{category_uid}', [TemplateController::class, 'builderTemplates'])->name('templates.builderTemplates');
-        Route::post('/builder/create', [TemplateController::class, 'builderCreate'])->name('templates.builderCreate');
-        Route::get('/builder/create', [TemplateController::class, 'builderCreate'])->name('templates.builderCreate');
+        Route::match(['get', 'post'], '/builder/create', [TemplateController::class, 'builderCreate'])->name('templates.builderCreate');
         Route::post('/{uid}/builder/edit/asset', [TemplateController::class, 'uploadTemplateAssets'])->name('templates.uploadTemplateAssets');
         Route::get('/{uid}/builder/edit/content', [TemplateController::class, 'builderEditContent'])->name('templates.builderEditContent');
         Route::post('/{uid}/builder/edit', [TemplateController::class, 'builderEdit'])->name('templates.builderEdit');
