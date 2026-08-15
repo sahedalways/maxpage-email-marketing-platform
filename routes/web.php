@@ -52,15 +52,12 @@ $templatesRoutes = function () {
         Route::match(['get', 'post'], '/builder/create', [TemplateController::class, 'builderCreate'])->name('templates.builderCreate');
         Route::post('/{uid}/builder/edit/asset', [TemplateController::class, 'uploadTemplateAssets'])->name('templates.uploadTemplateAssets');
         Route::get('/{uid}/builder/edit/content', [TemplateController::class, 'builderEditContent'])->name('templates.builderEditContent');
-        Route::post('/{uid}/builder/edit', [TemplateController::class, 'builderEdit'])->name('templates.builderEdit');
-        Route::get('/{uid}/builder/edit', [TemplateController::class, 'builderEdit'])->name('templates.builderEdit');
+        Route::match(['get', 'post'], '/{uid}/builder/edit', [TemplateController::class, 'builderEdit'])->name('templates.builderEdit');
 
-        Route::post('/{uid}/copy', [TemplateController::class, 'copy'])->name('templates.copy');
-        Route::get('/{uid}/copy', [TemplateController::class, 'copy'])->name('templates.copy');
+        Route::match(['get', 'post'], '/{uid}/copy', [TemplateController::class, 'copy'])->name('templates.copy');
         Route::get('/{uid}/preview', [TemplateController::class, 'preview'])->name('templates.preview');
         Route::get('/listing/{page?}', [TemplateController::class, 'listing'])->name('templates.listing');
-        Route::get('/upload', [TemplateController::class, 'uploadTemplate'])->name('templates.uploadTemplate');
-        Route::post('/upload', [TemplateController::class, 'uploadTemplate'])->name('templates.uploadTemplate');
+        Route::match(['get', 'post'], '/upload', [TemplateController::class, 'uploadTemplate'])->name('templates.uploadTemplate');
         Route::get('/delete', [TemplateController::class, 'delete'])->name('templates.delete');
         Route::get('/{uid}/edit', [TemplateController::class, 'edit'])->name('templates.edit');
         Route::post('/{uid}/update', [TemplateController::class, 'update'])->name('template.update');

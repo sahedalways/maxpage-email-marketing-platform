@@ -23,6 +23,6 @@ chown -R www-data:www-data /var/www/maxpage
 chmod -R 775 /var/www/maxpage/storage /var/www/maxpage/bootstrap/cache
 
 echo "=== [deploy] restarting queue workers ==="
-supervisorctl restart maxpage-worker
+supervisorctl restart maxpage-worker:*
 
 echo "=== [deploy] done ==="
