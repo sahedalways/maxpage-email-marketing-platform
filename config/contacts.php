@@ -13,7 +13,8 @@ return [
     | To add another API in the future, simply append another array below.
     | Each source accepts:
     |
-    |   'name'            Unique identifier for this source.
+    |   'name'            Source name shown in the app (no user type suffix;
+    |                     'user_type' below distinguishes customer/affiliate).
     |   'url'             Endpoint that returns JSON.
     |   'method'          HTTP method: GET or POST.
     |   'api_key'         Optional token sent via 'api_key_header'.
@@ -29,12 +30,14 @@ return [
     |   'user_type'       Optional label stored on every contact fetched from
     |                     this source, e.g. 'customer' or 'affiliate'.
     |   'timeout'         Request timeout in seconds.
+    |   'pagination'      Optional offset-based pagination: 'offset_param',
+    |                     'limit_param', 'page_size' and 'total_path'.
     |
     */
 
     'sources' => [
         [
-            'name' => 'Identity Search Customer',
+            'name' => 'Identity Search',
             'url' => env('CONTACTS_API_CUSTOMERS_URL', 'https://identitysearch.ai/api/customers-affiliates.php?source=Identity%20Search&user_type=customer'),
             'method' => 'GET',
             'api_key' => env('CONTACTS_API_KEY'),
@@ -45,10 +48,16 @@ return [
             'name_field' => 'name',
             'user_type' => 'customer',
             'timeout' => 30,
+            'pagination' => [
+                'offset_param' => 'offset',
+                'limit_param' => 'limit',
+                'page_size' => 500,
+                'total_path' => 'total',
+            ],
         ],
         [
-            'name' => 'Identity Search Affiliate',
-            'url' => env('CONTACTS_API_AFFILIATES_URL', 'https://identitysearch.ai/api/customers-affiliates.php?source=Identity%20Search&user_type=affilliate'),
+            'name' => 'Identity Search',
+            'url' => env('CONTACTS_API_AFFILIATES_URL', 'https://identitysearch.ai/api/customers-affiliates.php?source=Identity%20Search&user_type=affiliate'),
             'method' => 'GET',
             'api_key' => env('CONTACTS_API_KEY'),
             'api_key_query' => 'api_key',
@@ -58,6 +67,12 @@ return [
             'name_field' => 'name',
             'user_type' => 'affiliate',
             'timeout' => 30,
+            'pagination' => [
+                'offset_param' => 'offset',
+                'limit_param' => 'limit',
+                'page_size' => 500,
+                'total_path' => 'total',
+            ],
         ],
     ],
 

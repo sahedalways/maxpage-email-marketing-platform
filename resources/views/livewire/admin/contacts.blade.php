@@ -1,4 +1,4 @@
-<div>
+<div wire:poll.10000ms="pollFetchResult">
     <div class="row align-items-center justify-content-between mb-4">
         <div class="col">
             <h5 class="fw-500 text-white mb-0">{{ 'Contacts' }}</h5>
@@ -10,7 +10,7 @@
             <div class="card mb-4">
                 <div class="card-header p-4">
                     <div class="row g-2 align-items-end">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="contactSearch" class="form-label">
                                 <i class="fas fa-search"></i>
                                 {{ 'Search' }}
@@ -44,8 +44,55 @@
                                 @endforeach
                             </select>
                         </div>
+                    </div>
 
-                        <div class="col-md-2 d-flex justify-content-end">
+                    <hr class="my-3 text-dark opacity-2">
+
+                    <div class="d-flex flex-wrap align-items-start gap-2 pt-2">
+                        <div class="me-auto">
+                            @if ($syncInProgress)
+                                <div class="d-flex align-items-center gap-3 px-3 py-2 rounded-3 bg-gradient-info text-white shadow-sm">
+                                    <span class="spinner-border spinner-border-sm" role="status"></span>
+                                    <div class="text-sm">
+                                        <span class="text-uppercase text-xs opacity-8 fw-600 d-block">{{ 'Syncing' }}</span>
+                                        <span>{{ 'Fetching contacts from the APIs...' }}</span>
+                                    </div>
+                                </div>
+                            @elseif ($lastSync)
+                                <div class="d-flex align-items-center gap-3 px-3 py-2 rounded-3 border shadow-sm {{ $lastSync['success'] ? 'border-success' : 'border-danger' }}">
+                                    <span class="avatar avatar-sm bg-gradient-{{ $lastSync['success'] ? 'success' : 'danger' }} text-white d-flex align-items-center justify-content-center shadow-sm">
+                                        <i class="fas {{ $lastSync['success'] ? 'fa-check' : 'fa-exclamation' }} text-white"></i>
+                                    </span>
+                                    <div>
+                                        <span class="text-xs text-uppercase fw-600 d-block {{ $lastSync['success'] ? 'text-success' : 'text-danger' }}">
+                                            {{ $lastSync['success'] ? 'Last sync' : 'Sync failed' }}
+                                        </span>
+                                        <div class="text-sm d-flex flex-wrap align-items-center gap-2 mt-1">
+                                            <span class="text-dark font-weight-bold">{{ now()->parse($lastSync['finished_at'])->format('M d, Y h:i A') }}</span>
+                                            @if ($lastSync['success'])
+                                                @foreach ($lastSync['summary'] as $source => $stats)
+                                                    <span class="badge badge-sm rounded-3 px-2 py-1 {{ $stats['inserted'] > 0 ? 'bg-gradient-success text-white' : 'bg-light text-dark' }}">
+                                                        {{ $source }}: +{{ $stats['inserted'] }} / {{ $stats['skipped'] }} skipped
+                                                    </span>
+                                                @endforeach
+                                            @else
+                                                <span class="text-danger text-xs">{{ $lastSync['error'] ?? 'Unknown error' }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
+                            <button type="button" class="btn btn-success" wire:click="fetchContacts"
+                                wire:loading.attr="disabled" wire:target="fetchContacts">
+                                <i class="fas fa-sync-alt me-1"></i>
+                                <span wire:loading.remove wire:target="fetchContacts">{{ 'Fetch Contacts' }}</span>
+                                <span wire:loading wire:target="fetchContacts">
+                                    <span class="spinner-border spinner-border-sm me-1"></span>{{ 'Fetching...' }}
+                                </span>
+                            </button>
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#contactModal" wire:click="openAdd">
                                 <i class="fas fa-plus me-1"></i> {{ 'Add Contact' }}
@@ -79,10 +126,26 @@
                                             <p class="text-sm font-weight-bold mb-0">{{ $contact->name ?? 'N/A' }}</p>
                                         </td>
                                         <td>
-                                            <p class="text-sm mb-0">{{ $contact->email ?? 'N/A' }}</p>
+                                            @if ($contact->email)
+                                                <a href="#" class="text-dark text-sm d-inline-block text-decoration-none copy-value"
+                                                    title="{{ 'Click to copy email' }}"
+                                                    onclick="return copyText('{{ $contact->email }}', 'email')">
+                                                    {{ $contact->email }}
+                                                </a>
+                                            @else
+                                                <p class="text-sm mb-0">N/A</p>
+                                            @endif
                                         </td>
                                         <td>
-                                            <p class="text-sm mb-0">{{ $contact->phone ?? 'N/A' }}</p>
+                                            @if ($contact->phone)
+                                                <a href="#" class="text-dark text-sm d-inline-block text-decoration-none copy-value"
+                                                    title="{{ 'Click to copy phone' }}"
+                                                    onclick="return copyText('{{ $contact->phone }}', 'phone number')">
+                                                    {{ $contact->phone }}
+                                                </a>
+                                            @else
+                                                <p class="text-sm mb-0">N/A</p>
+                                            @endif
                                         </td>
                                         <td>
                                             @if ($contact->source)
@@ -139,7 +202,7 @@
                     </div>
 
                     @if ($contacts->hasPages())
-                        <div class="d-flex justify-content-center p-3">
+                        <div class="d-flex justify-content-center px-3 pt-5 pb-3">
                             {{ $contacts->links() }}
                         </div>
                     @endif
@@ -233,7 +296,88 @@
         </div>
     </div>
 
+    <style>
+        .copy-value {
+            cursor: pointer;
+            border-bottom: 1px dashed #c7d6e0;
+            transition: color .15s ease;
+        }
+
+        .copy-value:hover {
+            color: #5e72e4 !important;
+        }
+
+        .pagination {
+            gap: 10px;
+        }
+
+        .pagination .page-link {
+            min-width: 38px;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #67748e;
+            background: #fff;
+            border: 1px solid #e9edf4;
+            border-radius: 0.625rem;
+            box-shadow: 0 4px 8px rgba(15, 23, 42, 0.06);
+            padding: 0.5rem 0.75rem;
+            transition: all .2s ease;
+        }
+
+        .pagination .page-link:hover {
+            color: #fff;
+            background: #05ABD3;
+            border-color: #05ABD3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(5, 171, 211, 0.35);
+        }
+
+        .pagination .page-item.active .page-link {
+            color: #fff;
+            background: linear-gradient(310deg, #05ABD3 0%, #825ee4 100%);
+            border-color: transparent;
+            box-shadow: 0 6px 12px rgba(5, 171, 211, 0.35);
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: #cbd5e1;
+            background: #f8fafc;
+            border-color: #e9edf4;
+            box-shadow: none;
+            transform: none;
+        }
+    </style>
+
     <script>
+        function copyText(text, label) {
+            const fallback = () => {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                try {
+                    document.execCommand('copy');
+                    toastr.success(label.charAt(0).toUpperCase() + label.slice(1) + ' copied.');
+                } catch (e) {
+                    toastr.error('Could not copy ' + label + '.');
+                }
+                document.body.removeChild(ta);
+            };
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    toastr.success(label.charAt(0).toUpperCase() + label.slice(1) + ' copied.');
+                }).catch(() => fallback());
+            } else {
+                fallback();
+            }
+
+            return false;
+        }
+
         function confirmDelete(id) {
             Swal.fire({
                 title: 'Are you sure?',

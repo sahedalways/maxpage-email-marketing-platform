@@ -53,6 +53,26 @@
             @yield('content')
         </div>
     </main>
+
+    <div class="modal fade" id="globalModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content border-0 shadow-lg rounded-3">
+                <div class="modal-body p-4 text-center">
+                    <div id="globalModalIcon"
+                        class="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle text-white"
+                        style="width: 64px; height: 64px;">
+                        <i class="fas fa-check fa-2x"></i>
+                    </div>
+                    <h6 id="globalModalTitle" class="fw-600 mb-1 text-dark"></h6>
+                    <p id="globalModalMessage" class="text-sm text-body mb-0"></p>
+                    <div id="globalModalSummary" class="mt-3 d-flex flex-wrap justify-content-center gap-2"></div>
+                </div>
+                <div class="modal-footer border-0 justify-content-center pt-0">
+                    <button type="button" class="btn btn-primary btn-sm px-4" data-bs-dismiss="modal">{{ 'OK' }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
     <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
@@ -85,6 +105,35 @@
         Livewire.on('reloadpage', () => {
             window.location.reload();
         })
+    </script>
+    <script>
+        "use strict";
+        window.addEventListener('showGlobalModal', event => {
+            const { type = 'success', title = '', message = '', summary = [] } = event.detail;
+            const styles = {
+                success: { bg: '#2dce89', icon: 'fa-check' },
+                error: { bg: '#f5365c', icon: 'fa-exclamation' },
+                warning: { bg: '#fb6340', icon: 'fa-exclamation-triangle' },
+                info: { bg: '#05ABD3', icon: 'fa-info' },
+            };
+            const style = styles[type] || styles.success;
+            const icon = document.getElementById('globalModalIcon');
+            icon.style.background = style.bg;
+            icon.innerHTML = '<i class="fas ' + style.icon + ' fa-2x text-white"></i>';
+            document.getElementById('globalModalTitle').textContent = title;
+            document.getElementById('globalModalMessage').textContent = message;
+            const summaryBox = document.getElementById('globalModalSummary');
+            summaryBox.innerHTML = '';
+            (summary || []).forEach(item => {
+                const badge = document.createElement('span');
+                badge.className = 'badge badge-sm rounded-3 px-2 py-1 bg-light text-dark border';
+                badge.textContent = item;
+                summaryBox.appendChild(badge);
+            });
+            const modalEl = document.getElementById('globalModal');
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+        });
     </script>
     <script>
         "use strict";

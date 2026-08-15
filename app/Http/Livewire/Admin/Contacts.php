@@ -2,9 +2,13 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Jobs\FetchContactsJob;
 use App\Models\Contact;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Throwable;
 
 class Contacts extends Component
 {
@@ -61,7 +65,67 @@ class Contacts extends Component
             'contacts' => $contacts,
             'sources' => $sources,
             'userTypes' => $userTypes,
+            'syncInProgress' => (bool) Cache::get('contacts_fetch_in_progress'),
+            'lastSync' => Cache::get('contacts_fetch_result'),
         ]);
+    }
+
+    public function fetchContacts()
+    {
+        if (Cache::get('contacts_fetch_in_progress')) {
+            $this->dispatchBrowserEvent('alert', ['type' => 'warning', 'message' => 'A contact sync is already running. Please wait.']);
+
+            return;
+        }
+
+        Cache::put('contacts_fetch_in_progress', true, now()->addMinutes(30));
+
+        try {
+            FetchContactsJob::dispatch();
+        } catch (Throwable $e) {
+            Cache::forget('contacts_fetch_in_progress');
+
+            Log::error('Contact sync dispatch failed: ' . $e->getMessage());
+
+            $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => 'Could not start the sync. Check the queue worker and logs.']);
+
+            return;
+        }
+
+        $this->dispatchBrowserEvent('alert', ['type' => 'info', 'message' => 'Contact sync started in the background.']);
+    }
+
+    public function pollFetchResult()
+    {
+        if (Cache::get('contacts_fetch_in_progress') || Cache::get('contacts_fetch_notified') || !Cache::has('contacts_fetch_result')) {
+            return;
+        }
+
+        Cache::put('contacts_fetch_notified', true, now()->addHours(24));
+
+        $result = Cache::get('contacts_fetch_result');
+
+        if (!empty($result['success'])) {
+            $summary = [];
+
+            foreach ($result['summary'] as $source => $stats) {
+                $summary[] = "{$source}: +{$stats['inserted']} / {$stats['skipped']} skipped";
+            }
+
+            $this->dispatchBrowserEvent('showGlobalModal', [
+                'type' => 'success',
+                'title' => 'Contact sync completed',
+                'message' => count($summary) > 0 ? 'Your contacts have been synced successfully.' : 'No contacts were synced.',
+                'summary' => $summary,
+            ]);
+        } else {
+            $this->dispatchBrowserEvent('showGlobalModal', [
+                'type' => 'error',
+                'title' => 'Contact sync failed',
+                'message' => $result['error'] ?? 'Unknown error',
+                'summary' => [],
+            ]);
+        }
     }
 
     public function updatedSearch()

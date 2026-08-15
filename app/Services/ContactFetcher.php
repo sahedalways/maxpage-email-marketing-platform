@@ -6,6 +6,7 @@ use App\Models\Contact;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 class ContactFetcher
 {
@@ -20,7 +21,8 @@ class ContactFetcher
         $summary = [];
 
         foreach (config('contacts.sources', []) as $source) {
-            $summary[$source['name'] ?? 'unknown'] = $this->fetchSource($source);
+            $key = trim(($source['name'] ?? 'unknown') . ' (' . ($source['user_type'] ?? '') . ')');
+            $summary[$key] = $this->fetchSource($source);
         }
 
         return $summary;
@@ -40,21 +42,13 @@ class ContactFetcher
             return ['inserted' => 0, 'skipped' => 0, 'error' => 'No URL configured for this source.'];
         }
 
-        $response = $this->request($source);
-
-        if ($response->failed()) {
-            $error = "Contact sync failed ({$source['name']}): HTTP {$response->status()}";
-
-            Log::error($error);
-
-            return ['inserted' => 0, 'skipped' => 0, 'error' => $error];
+        try {
+            $items = $this->fetchAllItems($source);
+        } catch (RuntimeException $e) {
+            return ['inserted' => 0, 'skipped' => 0, 'error' => $e->getMessage()];
         }
 
-        $payload = $response->json();
-
-        $items = $this->resolveItems($payload, $source['data_path'] ?? null);
-
-        if (!is_array($items) || count($items) === 0) {
+        if (count($items) === 0) {
             return ['inserted' => 0, 'skipped' => 0];
         }
 
@@ -62,12 +56,60 @@ class ContactFetcher
     }
 
     /**
+     * Fetch every page of a source, following offset-based pagination when
+     * the source configures a 'pagination' block.
+     *
+     * @param array $source
+     * @return array
+     */
+    protected function fetchAllItems(array $source)
+    {
+        $allItems = [];
+        $offset = 0;
+        $pagination = $source['pagination'] ?? null;
+        $pageSize = $pagination ? (int) ($pagination['page_size'] ?? 0) : 0;
+
+        do {
+            $response = $this->request($source, $offset);
+
+            if ($response->failed()) {
+                $error = "Contact sync failed ({$source['name']}): HTTP {$response->status()}";
+
+                Log::error($error);
+
+                throw new RuntimeException($error);
+            }
+
+            $payload = $response->json();
+            $items = $this->resolveItems($payload, $source['data_path'] ?? null);
+
+            if (count($items) === 0) {
+                break;
+            }
+
+            $allItems = array_merge($allItems, $items);
+
+            if (!$pagination || $pageSize <= 0) {
+                break;
+            }
+
+            $offset += count($items);
+
+            $total = Arr::get($payload, $pagination['total_path'] ?? 'total', $offset);
+            $more = $offset < (int) $total;
+        } while ($more);
+
+        return $allItems;
+    }
+
+    /**
      * Perform the HTTP request for a source.
      *
      * @param array $source
+     * @param int $offset
      * @return \Illuminate\Http\Client\Response
      */
-    protected function request(array $source)
+    protected function request(array $source, int $offset = 0)
     {
         $headers = [];
         $apiKey = $source['api_key'] ?? null;
@@ -77,10 +119,30 @@ class ContactFetcher
         }
 
         $url = $source['url'] ?? null;
+        $query = [];
 
         if (!empty($apiKey) && !empty($source['api_key_query'])) {
-            $separator = str_contains($url, '?') ? '&' : '?';
-            $url .= $separator . $source['api_key_query'] . '=' . urlencode($apiKey);
+            $query[$source['api_key_query']] = $apiKey;
+        }
+
+        $pagination = $source['pagination'] ?? null;
+
+        if ($pagination) {
+            $offsetParam = $pagination['offset_param'] ?? 'offset';
+            $limitParam = $pagination['limit_param'] ?? 'limit';
+            $pageSize = (int) ($pagination['page_size'] ?? 0);
+
+            if ($offset > 0) {
+                $query[$offsetParam] = $offset;
+            }
+
+            if ($pageSize > 0) {
+                $query[$limitParam] = $pageSize;
+            }
+        }
+
+        if (count($query) > 0) {
+            $url .= (str_contains($url, '?') ? '&' : '?') . http_build_query($query);
         }
 
         $client = Http::withHeaders($headers)->timeout($source['timeout'] ?? 30);
@@ -177,13 +239,16 @@ class ContactFetcher
         $rows = $this->filterExistingPhoneOnly($rows);
 
         // Insert in chunks. The unique index on `email` makes insertOrIgnore
-        // silently drop any email that already exists in the database.
+        // silently drop any email that already exists in the database, so the
+        // returned count reflects only the rows that were actually inserted.
+        $inserted = 0;
+
         foreach (array_chunk($rows, 500) as $chunk) {
-            Contact::insertOrIgnore($chunk);
+            $inserted += Contact::insertOrIgnore($chunk);
         }
 
         return [
-            'inserted' => count($rows),
+            'inserted' => $inserted,
             'skipped' => $skipped,
         ];
     }
@@ -204,8 +269,15 @@ class ContactFetcher
             return $rows;
         }
 
-        $phones = array_column($phoneOnly, 'phone');
-        $existing = Contact::whereIn('phone', $phones)->pluck('phone')->flip();
+        $existing = [];
+
+        // Query in small batches so a source with a huge number of phone-only
+        // rows never produces an oversized WHERE IN query.
+        foreach (array_chunk(array_values(array_unique(array_column($phoneOnly, 'phone'))), 1000) as $chunk) {
+            $existing = array_merge($existing, Contact::whereIn('phone', $chunk)->pluck('phone')->all());
+        }
+
+        $existing = array_flip($existing);
 
         foreach ($rows as $key => $row) {
             if (empty($row['email']) && !empty($row['phone']) && isset($existing[$row['phone']])) {
