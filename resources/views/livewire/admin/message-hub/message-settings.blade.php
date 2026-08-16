@@ -315,7 +315,6 @@
             </div>
         </div>
 
-    </div>
 
 
 
@@ -1383,6 +1382,8 @@
                 {{ session('error') }}
             </div>
         @endif
+    </div>
+
     </div>
 
 

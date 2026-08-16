@@ -184,7 +184,7 @@ class MessageSettings extends Component
         $this->item = null;
         $this->selectedEmailGatewayView = null;
         $this->selectedWhatsappGatewayView = null;
-        $this->serviceProvider = 'whatsapp_business';
+        $this->serviceProvider = $this->selectedGateway === 'email' ? 'brevo' : ($this->selectedGateway === 'sms' ? 'twilio' : 'whatsapp_business');
         $this->twilio_account_sid = '';
         $this->twilio_auth_token = '';
         $this->twilio_phone_number = '';

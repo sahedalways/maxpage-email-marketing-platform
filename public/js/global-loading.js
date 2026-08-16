@@ -61,6 +61,9 @@
             el.setAttribute('data-gl-restore', el.disabled ? '1' : '0');
             el.disabled = true;
         }
+        if (el.offsetWidth && el.offsetWidth < 130) {
+            el.classList.add('btn-loading-compact');
+        }
 
         var overlay = document.createElement('span');
         overlay.className = 'btn-loading-overlay';

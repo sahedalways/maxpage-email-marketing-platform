@@ -957,6 +957,7 @@ body {
     pointer-events: none !important;
     cursor: wait !important;
     opacity: 0.78 !important;
+    overflow: hidden !important;
 }
 
 .btn-loading .btn-loading-overlay {
@@ -965,21 +966,34 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.45rem;
-    background: rgba(255, 255, 255, 0.82);
+    gap: 0.4rem;
+    padding: 0 0.35rem;
+    background: rgba(255, 255, 255, 0.85);
     border-radius: inherit;
     color: #344767;
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     font-weight: 600;
+    line-height: 1.2;
     white-space: nowrap;
+    max-width: 100%;
     z-index: 5;
 }
 
 .btn-loading .gl-spinner {
-    width: 0.9rem;
-    height: 0.9rem;
+    width: 0.85rem;
+    height: 0.85rem;
     border-width: 0.15em;
+    flex-shrink: 0;
     color: #05ABD3 !important;
+}
+
+.btn-loading-compact .btn-loading-overlay {
+    gap: 0;
+    padding: 0;
+}
+
+.btn-loading-compact .gl-label {
+    display: none;
 }
 
 /* ============ Gateway page ============ */
