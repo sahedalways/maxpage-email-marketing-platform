@@ -864,6 +864,22 @@ body {
         min-width: 0 !important;
         width: 100% !important;
     }
+
+    .top-list-controls > .d-flex.align-items-center {
+        justify-content: space-between;
+    }
+
+    .top-list-controls .view-toggle {
+        order: 0;
+    }
+
+    .top-list-controls > .d-flex.align-items-center > a.btn {
+        flex: 1 1 auto;
+        text-align: center;
+        justify-content: center;
+        display: inline-flex;
+        align-items: center;
+    }
 }
 
 /* ============ Template grid cards ============ */
