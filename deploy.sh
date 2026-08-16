@@ -24,6 +24,7 @@ php artisan view:cache || echo "WARN: view cache failed (site still works)"
 echo "=== [deploy] fixing permissions ==="
 chown -R www:www /var/www/maxpage
 chmod -R 775 /var/www/maxpage/storage /var/www/maxpage/bootstrap/cache
+usermod -aG www www-data || echo "WARN: could not add www-data to www group"
 
 echo "=== [deploy] restarting queue workers ==="
 supervisorctl restart maxpage-worker:*
