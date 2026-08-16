@@ -33,7 +33,7 @@
 
 
         </div>
-        <div class="col-auto">
+        <div class="col-auto gateway-add-col">
 
             @if ($selectedGateway === 'email')
                 <a data-bs-toggle="modal" data-bs-target="#addEmailGateway" wire:click="resetInputFields"
@@ -53,19 +53,20 @@
                 </a>
             @endif
         </div>
+    </div>
 
 
-        <div class="row">
-            <div class="col-12">
-                <div class="card mb-4">
-                    <div class="card-header p-4">
-                        <div class="row">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header p-4">
+                    <div class="row">
 
-                        </div>
                     </div>
+                </div>
 
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
                             <table class="table align-items-center mb-0">
                                 <thead class="bg-light">
                                     @if ($selectedGateway === 'email')

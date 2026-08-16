@@ -66,7 +66,7 @@
                             <a class="nav-link {{ $activeTemplates ? 'active' : '' }}"
                                 href="{{ url($prefix . '/templates') }}">
                                 <span class="sidenav-mini-icon side-bar-inner"><i class="fas fa-copy"></i></span>
-                                <span class="sidenav-normal side-bar-inner">{{ 'Mail Templates' }}</span>
+                                <span class="sidenav-normal side-bar-inner">{{ 'Templates' }}</span>
                             </a>
                         </li>
 

@@ -803,19 +803,21 @@ body {
 }
 
 /* ============ Page heading rows (title + action buttons) ============ */
-@media (max-width: 575.98px) {
+@media (max-width: 767.98px) {
     .row.align-items-center.justify-content-between.mb-4 > .col-auto {
         width: 100%;
         padding-left: 0;
         padding-right: 0;
-        margin-top: 0.5rem;
+        margin-top: 0.75rem;
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem;
+        gap: 0.75rem;
     }
 
     .row.align-items-center.justify-content-between.mb-4 > .col-auto .btn {
         white-space: normal;
+        flex: 0 0 auto;
+        margin-right: 0 !important;
     }
 }
 
@@ -823,6 +825,18 @@ body {
 @media (max-width: 991.98px) {
     .top-list-controls {
         gap: 10px !important;
+    }
+
+    .top-list-controls > .d-flex.align-items-center {
+        margin-left: 0 !important;
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 8px !important;
+    }
+
+    .top-list-controls .view-toggle {
+        top: 0 !important;
     }
 }
 
@@ -849,13 +863,6 @@ body {
     .top-list-controls input.search {
         min-width: 0 !important;
         width: 100% !important;
-    }
-
-    .top-list-controls > .d-flex.align-items-center {
-        margin-left: 0 !important;
-        width: 100%;
-        justify-content: flex-start;
-        flex-wrap: wrap;
     }
 }
 
@@ -890,6 +897,96 @@ body {
 
     .filter-action-row .btn {
         flex: 1 1 auto;
+    }
+}
+
+/* ============ Template builder (create) ============ */
+@media (max-width: 575.98px) {
+    .template-create-sticky {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .template-create-sticky .start-design {
+        padding: 0.4rem 0.9rem !important;
+        font-size: 0.8125rem;
+    }
+
+    .template-create-sticky p {
+        width: 100%;
+    }
+}
+
+/* ============ Contacts page ============ */
+.sync-status-box {
+    min-width: 0;
+}
+
+.sync-status-box > div:last-child {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+@media (max-width: 767.98px) {
+    .sync-status-box {
+        flex-wrap: wrap;
+    }
+
+    .pagination-responsive .pagination {
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .pagination-responsive .pagination .page-link {
+        min-width: 32px;
+        padding: 0.4rem 0.55rem;
+        font-size: 0.8125rem;
+    }
+}
+
+/* ============ Mobile sidebar close button ============ */
+@media (max-width: 1199.98px) {
+    .g-sidenav-show.g-sidenav-pinned .sidenav {
+        z-index: 1021;
+    }
+}
+
+/* ============ Global button loading overlay ============ */
+.btn-loading {
+    position: relative !important;
+    pointer-events: none !important;
+    cursor: wait !important;
+    opacity: 0.78 !important;
+}
+
+.btn-loading .btn-loading-overlay {
+    position: absolute;
+    inset: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    background: rgba(255, 255, 255, 0.82);
+    border-radius: inherit;
+    color: #344767;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    white-space: nowrap;
+    z-index: 5;
+}
+
+.btn-loading .gl-spinner {
+    width: 0.9rem;
+    height: 0.9rem;
+    border-width: 0.15em;
+    color: #05ABD3 !important;
+}
+
+/* ============ Gateway page ============ */
+@media (max-width: 575.98px) {
+    .gateway-add-col {
+        justify-content: center;
+        margin-bottom: 1rem;
     }
 }
 

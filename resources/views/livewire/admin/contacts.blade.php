@@ -51,7 +51,7 @@
                     <div class="d-flex flex-wrap align-items-start gap-2 pt-2">
                         <div class="me-auto">
                             @if ($syncInProgress)
-                                <div class="d-flex align-items-center gap-3 px-3 py-2 rounded-3 bg-gradient-info text-white shadow-sm">
+                                <div class="sync-status-box d-flex align-items-center gap-3 px-3 py-2 rounded-3 bg-gradient-info text-white shadow-sm">
                                     <span class="spinner-border spinner-border-sm" role="status"></span>
                                     <div class="text-sm">
                                         <span class="text-uppercase text-xs opacity-8 fw-600 d-block">{{ 'Syncing' }}</span>
@@ -59,7 +59,7 @@
                                     </div>
                                 </div>
                             @elseif ($lastSync)
-                                <div class="d-flex align-items-center gap-3 px-3 py-2 rounded-3 border shadow-sm {{ $lastSync['success'] ? 'border-success' : 'border-danger' }}">
+                                <div class="sync-status-box d-flex align-items-center gap-3 px-3 py-2 rounded-3 border shadow-sm {{ $lastSync['success'] ? 'border-success' : 'border-danger' }}">
                                     <span class="avatar avatar-sm bg-gradient-{{ $lastSync['success'] ? 'success' : 'danger' }} text-white d-flex align-items-center justify-content-center shadow-sm">
                                         <i class="fas {{ $lastSync['success'] ? 'fa-check' : 'fa-exclamation' }} text-white"></i>
                                     </span>
@@ -202,8 +202,8 @@
                     </div>
 
                     @if ($contacts->hasPages())
-                        <div class="d-flex justify-content-center px-3 pt-5 pb-3">
-                            {{ $contacts->links() }}
+                        <div class="d-flex justify-content-center px-3 pt-5 pb-3 pagination-responsive">
+                            {{ $contacts->links('vendor.pagination.maxpage') }}
                         </div>
                     @endif
                 </div>

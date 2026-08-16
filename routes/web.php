@@ -56,7 +56,7 @@ $templatesRoutes = function () {
     });
 };
 
-/* asset serving used by email templates */
+/* asset serving used by eTemplates */
 Route::prefix('admin')->group(function () {
     Route::get('/files/{uid}/{name?}', [AssetController::class, 'userFiles'])->where('name', '.+')->name('user_files');
 

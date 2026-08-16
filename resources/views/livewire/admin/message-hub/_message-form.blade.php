@@ -14,7 +14,7 @@
 @endif
 
 <div class="row">
-    <div class="col-md-3 mb-4">
+    <div class="col-12 mb-4">
         <label for="template" class="form-label">Select Template</label>
         <select id="template" class="form-select"
             wire:model="selectedTemplate"
@@ -28,7 +28,7 @@
     </div>
 
     @if (!$isSelectTemp)
-        <div class="col-md-9">
+        <div class="col-12">
             @if ($criteria === 'email')
                 <div class="mb-4 custom-textarea" wire:ignore>
                     <label for="content" class="form-label">Message <span

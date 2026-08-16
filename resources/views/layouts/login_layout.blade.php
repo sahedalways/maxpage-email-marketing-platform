@@ -14,7 +14,7 @@
     <link href="{{ asset('assets/vendors/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
     <link id="pagestyle" href="{{ asset('assets/css/argon-dashboard.min28b5.css?v=2.0.0') }}" rel="stylesheet" />
-    <link id="pagestyle" href="{{ asset('assets/css/style.css') }}" rel="stylesheet" />
+    <link id="pagestyle" href="{{ asset('assets/css/style.css?v=14') }}" rel="stylesheet" />
     <script type="text/javascript" src="{{ URL::asset('core/js/jquery-3.6.4.min.js') }}"></script>
     <link href="{{ asset('assets/js/plugins/toastr.min.css') }}" rel="stylesheet" />
     @livewireScripts
@@ -57,6 +57,7 @@
     </script>
 
     <script src="{{ asset('assets/js/argon-dashboard.min.js') }}"></script>
+    <script src="{{ asset('js/global-loading.js') }}"></script>
 </body>
 
 </html>
