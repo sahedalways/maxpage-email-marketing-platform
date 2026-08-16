@@ -22,7 +22,7 @@ php artisan route:cache || echo "WARN: route cache failed (site still works)"
 php artisan view:cache || echo "WARN: view cache failed (site still works)"
 
 echo "=== [deploy] fixing permissions ==="
-chown -R www-data:www-data /var/www/maxpage
+chown -R www:www /var/www/maxpage
 chmod -R 775 /var/www/maxpage/storage /var/www/maxpage/bootstrap/cache
 
 echo "=== [deploy] restarting queue workers ==="

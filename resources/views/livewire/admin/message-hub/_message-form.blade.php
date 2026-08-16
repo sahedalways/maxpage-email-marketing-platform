@@ -13,8 +13,8 @@
     </div>
 @endif
 
-<div class="col-md-3">
-    <div class="mb-4">
+<div class="row">
+    <div class="col-md-3 mb-4">
         <label for="template" class="form-label">Select Template</label>
         <select id="template" class="form-select"
             wire:model="selectedTemplate"
@@ -26,9 +26,7 @@
             @endforeach
         </select>
     </div>
-</div>
 
-<div class="row g-0">
     @if (!$isSelectTemp)
         <div class="col-md-9">
             @if ($criteria === 'email')

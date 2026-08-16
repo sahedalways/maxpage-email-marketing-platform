@@ -13,12 +13,12 @@
                 title="Provide a valid phone number."></i></label>
     @endif
 
-    <div class="d-flex">
-        <input type="text" class="form-control" flex-grow-1
+    <div class="recipient-add-row">
+        <input type="text" class="form-control"
             placeholder="{{ $criteria === 'email' ? 'Enter recipient email' : 'Enter recipient phone number' }}"
             wire:model.live.debounce.300ms="contactSearch">
 
-        <button class="btn btn-primary mt-2 ms-3 w-20" flex-shrink-0
+        <button class="btn btn-primary mt-2 ms-3"
             wire:click.prevent="onChangeSearchField">
             Add Recipient
         </button>

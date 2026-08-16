@@ -38,24 +38,24 @@
                 <div class="card-header p-4">
                     <div class="row mt-3">
                         <div class="col-12">
-                            <div class="btn-group" role="group" aria-label="Audience Selection">
+                            <div class="audience-btn-group" role="group" aria-label="Audience Selection">
                                 <button type="button" wire:click="selectAudience('all')"
                                     class="btn btn-outline-primary {{ $selectedAudience === 'all' ? 'active text-white' : '' }}">
                                     <i class="fas fa-bullhorn me-2"></i> All Contacts
                                 </button>
 
                                 <button type="button" wire:click="selectAudience('type')"
-                                    class="btn btn-outline-primary ms-3 {{ $selectedAudience === 'type' ? 'active text-white' : '' }}">
+                                    class="btn btn-outline-primary {{ $selectedAudience === 'type' ? 'active text-white' : '' }}">
                                     <i class="fas fa-users me-2"></i> Specific User Type
                                 </button>
 
                                 <button type="button" wire:click="selectAudience('single')"
-                                    class="btn btn-outline-primary ms-3 {{ $selectedAudience === 'single' ? 'active text-white' : '' }}">
+                                    class="btn btn-outline-primary {{ $selectedAudience === 'single' ? 'active text-white' : '' }}">
                                     <i class="fas fa-user me-2"></i> Single Audience
                                 </button>
 
                                 <button type="button" wire:click="selectAudience('group')"
-                                    class="btn btn-outline-primary ms-3 {{ $selectedAudience === 'group' ? 'active text-white' : '' }}">
+                                    class="btn btn-outline-primary {{ $selectedAudience === 'group' ? 'active text-white' : '' }}">
                                     <i class="fas fa-users me-2"></i> Group Audience
                                 </button>
 
@@ -81,9 +81,8 @@
 
                 </div>
 
-                                <div class="card-body p-0">
-                    <div class="table-responsive" style="max-width: 900px;">
-                        <div class="ms-4 me-4">
+                <div class="card-body p-0">
+                    <div class="send-message-form-body">
 
                             @if ($selectedAudience === 'all' || $selectedAudience === 'type')
                                 <div class="alert alert-primary text-white mt-3" role="alert">
@@ -105,7 +104,6 @@
                                 'sendMethod' => $selectedCriteria === 'email' ? 'sendEmailMessage' : ($selectedCriteria === 'sms' ? 'sendSmsMessage' : 'sendWhatsappMessage'),
                             ])
 
-                        </div>
                     </div>
                 </div>
 

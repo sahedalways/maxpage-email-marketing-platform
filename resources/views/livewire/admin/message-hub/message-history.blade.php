@@ -54,8 +54,8 @@
                         </div>
 
 
-                        <div class="col-md-12 d-flex justify-content-start mt-2">
-                            <button type="button" class="btn btn-primary me-2" wire:click="filterResults">
+                        <div class="col-md-12 filter-action-row mt-2">
+                            <button type="button" class="btn btn-primary" wire:click="filterResults">
                                 <i class="fas fa-filter"></i> {{ 'Filter' }}
                             </button>
                             <button type="button" class="btn btn-secondary" wire:click="resetFilters">
