@@ -5,7 +5,7 @@
 @endsection
 @section('content')
     <div>
-        <div class="row align-items-center justify-content-between mb-4">
+        <div class="row align-items-center justify-content-between mb-4 templates-header-row">
             <div class="col">
                 <h5 class="fw-500 text-white mb-0">Templates</h5>
             </div>
